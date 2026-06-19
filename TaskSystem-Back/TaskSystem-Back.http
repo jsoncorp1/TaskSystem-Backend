@@ -1,0 +1,6 @@
+@TaskSystem_Back_HostAddress = http://localhost:5186
+
+GET {{TaskSystem_Back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
