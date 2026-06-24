@@ -1,26 +1,22 @@
-﻿using BCrypt.Net;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TaskSystem_Back.Data;
 using TaskSystem_Back.DTOs.Common;
 using TaskSystem_Back.DTOs.User;
 
 namespace TaskSystem_Back.Services;
 
-public class UserService
+public class UserService(AppDbContext db, IConfiguration config)
 {
-    private readonly AppDbContext _db;
-
-    public UserService(AppDbContext db)
-    {
-        _db = db;
-    }
-
     public async Task<PagedResultDto<UserDto>> GetAllAsync(
         int page, int pageSize,
         string? nombre, string? apellido, string? email,
         Guid? roleId, Guid? clientCompanyId)
     {
-        var query = _db.Users
+        var query = db.Users
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .Where(u => u.DeletedAt == null);
@@ -72,12 +68,12 @@ public class UserService
         int page, int pageSize,
         string? nombre, string? apellido, Guid? clientCompanyId)
     {
-        var clientRoleId = await _db.Roles
+        var clientRoleId = await db.Roles
             .Where(r => r.Name == "Cliente" && r.DeletedAt == null)
             .Select(r => r.Id)
             .FirstOrDefaultAsync();
 
-        var query = _db.Users
+        var query = db.Users
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .Where(u => u.DeletedAt == null && u.RoleId == clientRoleId);
@@ -121,7 +117,7 @@ public class UserService
 
     public async Task<UserDto?> GetByIdAsync(Guid id)
     {
-        var user = await _db.Users
+        var user = await db.Users
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt == null);
@@ -155,11 +151,11 @@ public class UserService
             ClientCompanyId = dto.ClientCompanyId
         };
 
-        _db.Users.Add(user);
-        await _db.SaveChangesAsync();
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
 
-        await _db.Entry(user).Reference(u => u.Role).LoadAsync();
-        await _db.Entry(user).Reference(u => u.ClientCompany).LoadAsync();
+        await db.Entry(user).Reference(u => u.Role).LoadAsync();
+        await db.Entry(user).Reference(u => u.ClientCompany).LoadAsync();
 
         return new UserDto
         {
@@ -177,7 +173,7 @@ public class UserService
 
     public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto dto)
     {
-        var user = await _db.Users
+        var user = await db.Users
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt == null);
@@ -195,10 +191,10 @@ public class UserService
         if (!string.IsNullOrWhiteSpace(dto.Password))
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
-        await _db.Entry(user).Reference(u => u.Role).LoadAsync();
-        await _db.Entry(user).Reference(u => u.ClientCompany).LoadAsync();
+        await db.Entry(user).Reference(u => u.Role).LoadAsync();
+        await db.Entry(user).Reference(u => u.ClientCompany).LoadAsync();
 
         return new UserDto
         {
@@ -216,39 +212,63 @@ public class UserService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var user = await _db.Users
+        var user = await db.Users
             .FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt == null);
 
         if (user == null) return false;
 
         user.DeletedAt = DateTime.UtcNow;
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<UserDto?> LoginAsync(LoginDto dto)
+    public async Task<LoginResponseDto?> LoginAsync(LoginDto dto)
     {
-        var user = await _db.Users
+        var user = await db.Users
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
+            .Include(u => u.DepartmentUsers.Where(du => du.DeletedAt == null))
+                .ThenInclude(du => du.Department)
             .FirstOrDefaultAsync(u => u.Email == dto.Email && u.DeletedAt == null);
 
         if (user == null || user.Password == null) return null;
-
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password)) return null;
 
-        return new UserDto
+        var departments = user.DepartmentUsers
+            .Select(du => du.Department.Name)
+            .ToList();
+
+        var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email!),
+            new Claim(ClaimTypes.Role, user.Role.Name),
+            new Claim("departments", string.Join(",", departments))
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: config["Jwt:Issuer"],
+            audience: config["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(8),
+            signingCredentials: creds
+        );
+
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return new LoginResponseDto
+        {
+            Token = tokenString,
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Phone = user.Phone,
-            Email = user.Email,
-            RoleId = user.RoleId,
+            Email = user.Email!,
             RoleName = user.Role.Name,
-            ClientCompanyId = user.ClientCompanyId,
-            ClientCompanyName = user.ClientCompany?.Name
+            Departments = departments
         };
     }
 }

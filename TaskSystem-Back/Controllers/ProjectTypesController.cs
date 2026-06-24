@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskSystem_Back.DTOs.ProjectType;
 using TaskSystem_Back.Services;
 
 namespace TaskSystem_Back.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/project-types")]
 public class ProjectTypesController(ProjectTypeService projectTypeService) : ControllerBase

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskSystem_Back.DTOs.DepartmentUser;
 using TaskSystem_Back.Services;
 
 namespace TaskSystem_Back.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/department-users")]
 public class DepartmentUsersController(DepartmentUserService departmentUserService) : ControllerBase

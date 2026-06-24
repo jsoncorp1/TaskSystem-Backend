@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskSystem_Back.DTOs.TaskItem;
 using TaskSystem_Back.Services;
 
 namespace TaskSystem_Back.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/tasks")]
 public class TaskItemsController : ControllerBase
