@@ -1,42 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskSystem_Back.DTOs.Role;
+using TaskSystem_Back.DTOs.ClientCompany;
 using TaskSystem_Back.Services;
 
 namespace TaskSystem_Back.Controllers;
 
 [ApiController]
-[Route("api/roles")]
-public class RolesController(RoleService roleService) : ControllerBase
+[Route("api/client-companies")]
+public class ClientCompaniesController(ClientCompanyService clientCompanyService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
-        [FromQuery] string? nombre = null)
+        [FromQuery] string? nombre = null,
+        [FromQuery] string? email = null)
     {
-        var result = await roleService.GetAllAsync(page, pageSize, nombre);
+        var result = await clientCompanyService.GetAllAsync(page, pageSize, nombre, email);
         return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await roleService.GetByIdAsync(id);
+        var result = await clientCompanyService.GetByIdAsync(id);
         if (result == null) return NotFound();
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateRoleDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateClientCompanyDto dto)
     {
-        var result = await roleService.CreateAsync(dto);
+        var result = await clientCompanyService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleDto dto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateClientCompanyDto dto)
     {
-        var result = await roleService.UpdateAsync(id, dto);
+        var result = await clientCompanyService.UpdateAsync(id, dto);
         if (result == null) return NotFound();
         return Ok(result);
     }
@@ -44,7 +45,7 @@ public class RolesController(RoleService roleService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var deleted = await roleService.DeleteAsync(id);
+        var deleted = await clientCompanyService.DeleteAsync(id);
         if (!deleted) return NotFound();
         return NoContent();
     }

@@ -15,6 +15,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CoreConnection")));
 //------------------------------------------------------
 builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<DepartmentService>();
+builder.Services.AddScoped<ProjectTypeService>();
+builder.Services.AddScoped<ClientCompanyService>();
+builder.Services.AddScoped<UserService>();
+//------------------------------------------------------
 var app = builder.Build();
 //------------------------------------------------------
 if (app.Environment.IsDevelopment())

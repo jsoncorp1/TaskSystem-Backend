@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskSystem_Back.DTOs.Role;
+using TaskSystem_Back.DTOs.ProjectType;
 using TaskSystem_Back.Services;
 
 namespace TaskSystem_Back.Controllers;
 
 [ApiController]
-[Route("api/roles")]
-public class RolesController(RoleService roleService) : ControllerBase
+[Route("api/project-types")]
+public class ProjectTypesController(ProjectTypeService projectTypeService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll(
@@ -14,29 +14,29 @@ public class RolesController(RoleService roleService) : ControllerBase
         [FromQuery] int pageSize = 10,
         [FromQuery] string? nombre = null)
     {
-        var result = await roleService.GetAllAsync(page, pageSize, nombre);
+        var result = await projectTypeService.GetAllAsync(page, pageSize, nombre);
         return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await roleService.GetByIdAsync(id);
+        var result = await projectTypeService.GetByIdAsync(id);
         if (result == null) return NotFound();
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateRoleDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateProjectTypeDto dto)
     {
-        var result = await roleService.CreateAsync(dto);
+        var result = await projectTypeService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleDto dto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectTypeDto dto)
     {
-        var result = await roleService.UpdateAsync(id, dto);
+        var result = await projectTypeService.UpdateAsync(id, dto);
         if (result == null) return NotFound();
         return Ok(result);
     }
@@ -44,7 +44,7 @@ public class RolesController(RoleService roleService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var deleted = await roleService.DeleteAsync(id);
+        var deleted = await projectTypeService.DeleteAsync(id);
         if (!deleted) return NotFound();
         return NoContent();
     }

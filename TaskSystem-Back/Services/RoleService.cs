@@ -5,18 +5,11 @@ using TaskSystem_Back.DTOs.Role;
 
 namespace TaskSystem_Back.Services;
 
-public class RoleService
+public class RoleService(AppDbContext db)
 {
-    private readonly AppDbContext _db;
-
-    public RoleService(AppDbContext db)
-    {
-        _db = db;
-    }
-
     public async Task<PagedResultDto<RoleDto>> GetAllAsync(int page, int pageSize, string? nombre)
     {
-        var query = _db.Roles.Where(r => r.DeletedAt == null);
+        var query = db.Roles.Where(r => r.DeletedAt == null);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(r => r.Name.ToLower().Contains(nombre.ToLower()));
@@ -45,7 +38,7 @@ public class RoleService
 
     public async Task<RoleDto?> GetByIdAsync(Guid id)
     {
-        var role = await _db.Roles
+        var role = await db.Roles
             .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
 
         if (role == null) return null;
@@ -66,8 +59,8 @@ public class RoleService
             Description = dto.Description
         };
 
-        _db.Roles.Add(role);
-        await _db.SaveChangesAsync();
+        db.Roles.Add(role);
+        await db.SaveChangesAsync();
 
         return new RoleDto
         {
@@ -79,7 +72,7 @@ public class RoleService
 
     public async Task<RoleDto?> UpdateAsync(Guid id, UpdateRoleDto dto)
     {
-        var role = await _db.Roles
+        var role = await db.Roles
             .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
 
         if (role == null) return null;
@@ -88,7 +81,7 @@ public class RoleService
         role.Description = dto.Description;
         role.UpdatedAt = DateTime.UtcNow;
 
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
         return new RoleDto
         {
@@ -100,13 +93,13 @@ public class RoleService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var role = await _db.Roles
+        var role = await db.Roles
             .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
 
         if (role == null) return false;
 
         role.DeletedAt = DateTime.UtcNow;
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
 
         return true;
     }
