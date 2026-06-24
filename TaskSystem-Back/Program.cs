@@ -23,6 +23,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DepartmentUserService>();
 builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<SubProjectService>();
+builder.Services.AddScoped<TaskItemService>();
+builder.Services.AddScoped<SubTaskService>();
 //------------------------------------------------------
 var app = builder.Build();
 //------------------------------------------------------

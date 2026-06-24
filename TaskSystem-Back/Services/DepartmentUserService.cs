@@ -5,7 +5,7 @@ using TaskSystem_Back.DTOs.DepartmentUser;
 
 namespace TaskSystem_Back.Services;
 
-public abstract class DepartmentUserService(AppDbContext db)
+public class DepartmentUserService(AppDbContext db)
 {
     public async Task<PagedResultDto<DepartmentUserDto>> GetAllAsync(
         int page, int pageSize,
