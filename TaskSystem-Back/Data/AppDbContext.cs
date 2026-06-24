@@ -126,6 +126,8 @@ public class AppDbContext : DbContext
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444401"), FirstName = "Vernica", LastName = "Paz",
+                Email = "vernica.paz@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111102"), CreatedAt = seedDate
             },
 
@@ -133,11 +135,15 @@ public class AppDbContext : DbContext
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444402"), FirstName = "Vanet", LastName = "Garcia",
+                Email = "vanet.garcia@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111103"), CreatedAt = seedDate
             },
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444403"), FirstName = "Anto", LastName = "Pomacusi",
+                Email = "anto.pomacusi@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111103"), CreatedAt = seedDate
             },
 
@@ -165,21 +171,29 @@ public class AppDbContext : DbContext
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444407"), FirstName = "Yoss", LastName = "Quiroga",
+                Email = "yoss.quiroga@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111104"), CreatedAt = seedDate
             }, // Operativo 1
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444408"), FirstName = "Belen", LastName = "Rodriguez",
+                Email = "belen.rodriguez@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111105"), CreatedAt = seedDate
             }, // Operativo 2
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444409"), FirstName = "Gabriel", LastName = "Aguilar",
+                Email = "gabriel.aguilar@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111104"), CreatedAt = seedDate
             }, // Operativo 1
             new User
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444410"), FirstName = "Ariane", LastName = "Alvarez",
+                Email = "ariane.alvarez@gmail.com",
+                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 RoleId = Guid.Parse("11111111-1111-1111-1111-111111111104"), CreatedAt = seedDate
             } // Operativo 1
         );
@@ -368,8 +382,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa08"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444401"), // Vernica Paz
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222207"), // Gerencia
-                Email = "vernica.paz@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -377,8 +389,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa01"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444402"), // Vanet García
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222202"), // Digital
-                Email = "vanet.garcia@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -386,8 +396,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa02"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444403"), // Anto Pomacusi
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222203"), // Diseño
-                Email = "anto.pomacusi@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -395,8 +403,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa03"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444403"), // Anto Pomacusi
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222204"), // Creatividad
-                Email = "anto.pomacusi@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -404,8 +410,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444407"), // Yoss Quiroga
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222203"), // Diseño
-                Email = "yoss.quiroga@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -413,8 +417,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa05"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444408"), // Belen Rodriguez
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222203"), // Diseño
-                Email = "belen.rodriguez@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -422,8 +424,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa06"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444409"), // Gabriel Aguilar
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222206"), // Ejecutivo de cuenta
-                Email = "gabriel.aguilar@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             },
             new DepartmentUser
@@ -431,8 +431,6 @@ public class AppDbContext : DbContext
                 Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa07"),
                 UserId = Guid.Parse("44444444-4444-4444-4444-444444444410"), // Ariane Alvarez
                 DepartmentId = Guid.Parse("22222222-2222-2222-2222-222222222201"), // ATL
-                Email = "ariane.alvarez@gmail.com",
-                Password = "$2b$11$nimYdExq5VFLkLlkcI2/aeCSrdXHIIZ8ytITFH13EMfcIM8LWB4Sy",
                 CreatedAt = seedDate
             }
         );
