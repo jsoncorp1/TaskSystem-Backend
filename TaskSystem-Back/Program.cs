@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskSystem_Back.Data;
+using TaskSystem_Back.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CoreConnection")));
 //------------------------------------------------------
+builder.Services.AddScoped<RoleService>();
 var app = builder.Build();
 //------------------------------------------------------
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,113 @@
+﻿using Microsoft.EntityFrameworkCore;
+using TaskSystem_Back.Data;
+using TaskSystem_Back.DTOs.Common;
+using TaskSystem_Back.DTOs.Role;
+
+namespace TaskSystem_Back.Services;
+
+public class RoleService
+{
+    private readonly AppDbContext _db;
+
+    public RoleService(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<PagedResultDto<RoleDto>> GetAllAsync(int page, int pageSize, string? nombre)
+    {
+        var query = _db.Roles.Where(r => r.DeletedAt == null);
+
+        if (!string.IsNullOrWhiteSpace(nombre))
+            query = query.Where(r => r.Name.ToLower().Contains(nombre.ToLower()));
+
+        var total = await query.CountAsync();
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(r => new RoleDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description
+            })
+            .ToListAsync();
+
+        return new PagedResultDto<RoleDto>
+        {
+            TotalItems = total,
+            Page = page,
+            PageSize = pageSize,
+            Items = items
+        };
+    }
+
+    public async Task<RoleDto?> GetByIdAsync(Guid id)
+    {
+        var role = await _db.Roles
+            .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
+
+        if (role == null) return null;
+
+        return new RoleDto
+        {
+            Id = role.Id,
+            Name = role.Name,
+            Description = role.Description
+        };
+    }
+
+    public async Task<RoleDto> CreateAsync(CreateRoleDto dto)
+    {
+        var role = new Models.Role
+        {
+            Name = dto.Name,
+            Description = dto.Description
+        };
+
+        _db.Roles.Add(role);
+        await _db.SaveChangesAsync();
+
+        return new RoleDto
+        {
+            Id = role.Id,
+            Name = role.Name,
+            Description = role.Description
+        };
+    }
+
+    public async Task<RoleDto?> UpdateAsync(Guid id, UpdateRoleDto dto)
+    {
+        var role = await _db.Roles
+            .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
+
+        if (role == null) return null;
+
+        role.Name = dto.Name;
+        role.Description = dto.Description;
+        role.UpdatedAt = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+
+        return new RoleDto
+        {
+            Id = role.Id,
+            Name = role.Name,
+            Description = role.Description
+        };
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var role = await _db.Roles
+            .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
+
+        if (role == null) return false;
+
+        role.DeletedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        return true;
+    }
+}
