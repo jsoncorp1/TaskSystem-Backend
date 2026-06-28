@@ -17,6 +17,7 @@ public class Project : BaseEntity
     // Usuario cliente que solicita: opcional
     public Guid? ClientUserId { get; set; }
     public User? ClientUser { get; set; }
+    
     public ICollection<SubProject> SubProjects { get; set; } = new List<SubProject>();
 
 }
