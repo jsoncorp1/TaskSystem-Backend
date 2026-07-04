@@ -44,6 +44,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+//CORS----------------------------------------------------
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+//------------------------------------------------------
+
 
 
 //PostgreSQL / Neon-------------------------------------- // <-- nuevo
@@ -71,6 +83,7 @@ if (app.Environment.IsDevelopment())
 }
 //-----------------------------------------------------
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
