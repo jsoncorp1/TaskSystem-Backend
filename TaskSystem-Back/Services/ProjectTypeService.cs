@@ -9,7 +9,7 @@ public class ProjectTypeService(AppDbContext db)
 {
     public async Task<PagedResultDto<ProjectTypeDto>> GetAllAsync(int page, int pageSize, string? nombre)
     {
-        var query = db.ProjectTypes.Where(p => p.DeletedAt == null);
+        var query = db.ProjectTypes.AsNoTracking().Where(p => p.DeletedAt == null);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(p => p.Name.ToLower().Contains(nombre.ToLower()));
@@ -39,6 +39,7 @@ public class ProjectTypeService(AppDbContext db)
     public async Task<ProjectTypeDto?> GetByIdAsync(Guid id)
     {
         var projectType = await db.ProjectTypes
+            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id && p.DeletedAt == null);
 
         if (projectType == null) return null;

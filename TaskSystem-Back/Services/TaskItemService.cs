@@ -20,6 +20,7 @@ public class TaskItemService
         string? status, Guid? assignedUserId)
     {
         var query = _db.TaskItems
+            .AsNoTracking()
             .Include(t => t.SubProject)
             .Include(t => t.AssignedUser)
             .Where(t => t.DeletedAt == null);
@@ -69,6 +70,7 @@ public class TaskItemService
     public async Task<TaskItemDto?> GetByIdAsync(Guid id)
     {
         var task = await _db.TaskItems
+            .AsNoTracking()
             .Include(t => t.SubProject)
             .Include(t => t.AssignedUser)
             .FirstOrDefaultAsync(t => t.Id == id && t.DeletedAt == null);

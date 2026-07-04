@@ -9,7 +9,7 @@ public class ClientCompanyService(AppDbContext db)
 {
     public async Task<PagedResultDto<ClientCompanyDto>> GetAllAsync(int page, int pageSize, string? nombre, string? email)
     {
-        var query = db.ClientCompanies.Where(c => c.DeletedAt == null);
+        var query = db.ClientCompanies.AsNoTracking().Where(c => c.DeletedAt == null);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(c => c.Name.ToLower().Contains(nombre.ToLower()));
@@ -44,6 +44,7 @@ public class ClientCompanyService(AppDbContext db)
     public async Task<ClientCompanyDto?> GetByIdAsync(Guid id)
     {
         var company = await db.ClientCompanies
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id && c.DeletedAt == null);
 
         if (company == null) return null;

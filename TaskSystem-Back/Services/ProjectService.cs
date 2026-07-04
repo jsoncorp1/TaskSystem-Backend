@@ -13,6 +13,7 @@ public class ProjectService(AppDbContext db)
         DateOnly? startDateFrom, DateOnly? startDateTo)
     {
         var query = db.Projects
+            .AsNoTracking()
             .Include(p => p.ProjectType)
             .Include(p => p.ClientUser)
             .Where(p => p.DeletedAt == null);
@@ -64,6 +65,7 @@ public class ProjectService(AppDbContext db)
     public async Task<ProjectDto?> GetByIdAsync(Guid id)
     {
         var project = await db.Projects
+            .AsNoTracking()
             .Include(p => p.ProjectType)
             .Include(p => p.ClientUser)
             .FirstOrDefaultAsync(p => p.Id == id && p.DeletedAt == null);
@@ -88,6 +90,7 @@ public class ProjectService(AppDbContext db)
     public async Task<ProjectFullDto?> GetFullAsync(Guid id)
     {
         var project = await db.Projects
+            .AsNoTracking()
             .Include(p => p.ProjectType)
             .Include(p => p.ClientUser)
             .Include(p => p.SubProjects.Where(sp => sp.DeletedAt == null))

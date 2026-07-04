@@ -9,7 +9,7 @@ public class RoleService(AppDbContext db)
 {
     public async Task<PagedResultDto<RoleDto>> GetAllAsync(int page, int pageSize, string? nombre)
     {
-        var query = db.Roles.Where(r => r.DeletedAt == null);
+        var query = db.Roles.AsNoTracking().Where(r => r.DeletedAt == null);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(r => r.Name.ToLower().Contains(nombre.ToLower()));
@@ -39,6 +39,7 @@ public class RoleService(AppDbContext db)
     public async Task<RoleDto?> GetByIdAsync(Guid id)
     {
         var role = await db.Roles
+            .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Id == id && r.DeletedAt == null);
 
         if (role == null) return null;

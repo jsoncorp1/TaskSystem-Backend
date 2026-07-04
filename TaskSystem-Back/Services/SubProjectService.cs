@@ -20,6 +20,7 @@ public class SubProjectService
         string? status, Guid? assignedUserId)
     {
         var query = _db.SubProjects
+            .AsNoTracking()
             .Include(sp => sp.Project)
             .Include(sp => sp.Department)
             .Include(sp => sp.AssignedUser)
@@ -75,6 +76,7 @@ public class SubProjectService
     public async Task<SubProjectDto?> GetByIdAsync(Guid id)
     {
         var sp = await _db.SubProjects
+            .AsNoTracking()
             .Include(s => s.Project)
             .Include(s => s.Department)
             .Include(s => s.AssignedUser)

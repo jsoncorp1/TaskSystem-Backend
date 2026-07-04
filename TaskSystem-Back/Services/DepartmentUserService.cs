@@ -12,6 +12,7 @@ public class DepartmentUserService(AppDbContext db)
         Guid? userId, Guid? departmentId)
     {
         var query = db.DepartmentUsers
+            .AsNoTracking()
             .Include(du => du.User)
             .Include(du => du.Department)
             .Where(du => du.DeletedAt == null);
@@ -50,6 +51,7 @@ public class DepartmentUserService(AppDbContext db)
     public async Task<DepartmentUserDto?> GetByIdAsync(Guid id)
     {
         var du = await db.DepartmentUsers
+            .AsNoTracking()
             .Include(du => du.User)
             .Include(du => du.Department)
             .FirstOrDefaultAsync(du => du.Id == id && du.DeletedAt == null);

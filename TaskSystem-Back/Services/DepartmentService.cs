@@ -9,7 +9,7 @@ public class DepartmentService(AppDbContext db)
 {
     public async Task<PagedResultDto<DepartmentDto>> GetAllAsync(int page, int pageSize, string? nombre)
     {
-        var query = db.Departments.Where(d => d.DeletedAt == null);
+        var query = db.Departments.AsNoTracking().Where(d => d.DeletedAt == null);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(d => d.Name.ToLower().Contains(nombre.ToLower()));
@@ -39,6 +39,7 @@ public class DepartmentService(AppDbContext db)
     public async Task<DepartmentDto?> GetByIdAsync(Guid id)
     {
         var department = await db.Departments
+            .AsNoTracking()
             .FirstOrDefaultAsync(d => d.Id == id && d.DeletedAt == null);
 
         if (department == null) return null;

@@ -17,6 +17,7 @@ public class UserService(AppDbContext db, IConfiguration config)
         Guid? roleId, Guid? clientCompanyId)
     {
         var query = db.Users
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .Where(u => u.DeletedAt == null);
@@ -74,6 +75,7 @@ public class UserService(AppDbContext db, IConfiguration config)
             .FirstOrDefaultAsync();
 
         var query = db.Users
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .Where(u => u.DeletedAt == null && u.RoleId == clientRoleId);
@@ -118,6 +120,7 @@ public class UserService(AppDbContext db, IConfiguration config)
     public async Task<UserDto?> GetByIdAsync(Guid id)
     {
         var user = await db.Users
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt == null);
@@ -226,6 +229,7 @@ public class UserService(AppDbContext db, IConfiguration config)
     public async Task<LoginResponseDto?> LoginAsync(LoginDto dto)
     {
         var user = await db.Users
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.ClientCompany)
             .Include(u => u.DepartmentUsers.Where(du => du.DeletedAt == null))

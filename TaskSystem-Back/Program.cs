@@ -24,6 +24,14 @@ builder.Services.AddSwaggerGen(c =>
         In = ParameterLocation.Header,
         Description = "Ingresa el token JWT"
     });
+
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", document),
+            new List<string>()
+        }
+    });
 });
 
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -60,8 +68,7 @@ builder.Services.AddCors(options =>
 
 //PostgreSQL / Neon-------------------------------------- // <-- nuevo
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("CoreConnection"))
-        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CoreConnection")));
 //------------------------------------------------------
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<DepartmentService>();

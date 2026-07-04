@@ -20,6 +20,7 @@ public class SubTaskService
         string? status, Guid? assignedUserId)
     {
         var query = _db.SubTasks
+            .AsNoTracking()
             .Include(st => st.TaskItem)
             .Include(st => st.AssignedUser)
             .Where(st => st.DeletedAt == null);
@@ -69,6 +70,7 @@ public class SubTaskService
     public async Task<SubTaskDto?> GetByIdAsync(Guid id)
     {
         var st = await _db.SubTasks
+            .AsNoTracking()
             .Include(s => s.TaskItem)
             .Include(s => s.AssignedUser)
             .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
